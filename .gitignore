@@ -2,4 +2,7 @@
 !/user/
 !/FWLib/
 !/usb_library/
+!/startup/
 !.gitignore
+!*.uvproj
+!*.uvopt
