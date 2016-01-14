@@ -10,6 +10,7 @@
       <TargetName>STM32-FD-USB-SD</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
+      <pCCUsed>5060020::V5.06 (build 20)::ARMCC</pCCUsed>
       <TargetOption>
         <TargetCommonOption>
           <Device>STM32F103VE</Device>
@@ -54,7 +55,7 @@
           <ListingPath>.\List\</ListingPath>
           <HexFormatSelection>1</HexFormatSelection>
           <Merge32K>0</Merge32K>
-          <CreateBatchFile>1</CreateBatchFile>
+          <CreateBatchFile>0</CreateBatchFile>
           <BeforeCompile>
             <RunUserProg1>0</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
@@ -147,7 +148,7 @@
             <RestoreSysVw>1</RestoreSysVw>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>-1</TargetSelection>
+          <TargetSelection>6</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -173,7 +174,7 @@
             <Capability>1</Capability>
             <DriverSelection>4101</DriverSelection>
           </Flash1>
-          <bUseTDR>0</bUseTDR>
+          <bUseTDR>1</bUseTDR>
           <Flash2>Segger\JL2CM3.dll</Flash2>
           <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
@@ -210,7 +211,7 @@
             <AdsLven>1</AdsLven>
             <AdsLsxf>1</AdsLsxf>
             <RvctClst>1</RvctClst>
-            <GenPPlst>1</GenPPlst>
+            <GenPPlst>0</GenPPlst>
             <AdsCpuType>"Cortex-M3"</AdsCpuType>
             <RvctDeviceName></RvctDeviceName>
             <mOS>0</mOS>
@@ -227,6 +228,7 @@
             <useUlib>1</useUlib>
             <EndSel>0</EndSel>
             <uLtcg>0</uLtcg>
+            <nSecure>0</nSecure>
             <RoSelD>3</RoSelD>
             <RwSelD>5</RwSelD>
             <CodeSel>0</CodeSel>
@@ -363,6 +365,8 @@
             <useXO>0</useXO>
             <v6Lang>0</v6Lang>
             <v6LangP>0</v6LangP>
+            <vShortEn>0</vShortEn>
+            <vShortWch>0</vShortWch>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define>USE_STDPERIPH_DRIVER, STM32F10X_HD</Define>
@@ -446,9 +450,9 @@
               <FilePath>.\user\usb_pwr.c</FilePath>
             </File>
             <File>
-              <FileName>sdcard.c</FileName>
+              <FileName>stm3210e_eval_fsmc_nand.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\user\sdcard.c</FilePath>
+              <FilePath>.\user\stm3210e_eval_fsmc_nand.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -471,14 +475,14 @@
               <FilePath>.\FWlib\SRC\misc.c</FilePath>
             </File>
             <File>
-              <FileName>stm32f10x_gpio.c</FileName>
+              <FileName>stm32f10x_usart.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FWlib\SRC\stm32f10x_gpio.c</FilePath>
+              <FilePath>.\FWlib\SRC\stm32f10x_usart.c</FilePath>
             </File>
             <File>
-              <FileName>stm32f10x_rcc.c</FileName>
+              <FileName>stm32f10x_fsmc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FWlib\SRC\stm32f10x_rcc.c</FilePath>
+              <FilePath>.\FWlib\SRC\stm32f10x_fsmc.c</FilePath>
             </File>
             <File>
               <FileName>stm32f10x_flash.c</FileName>
@@ -486,24 +490,14 @@
               <FilePath>.\FWlib\SRC\stm32f10x_flash.c</FilePath>
             </File>
             <File>
-              <FileName>stm32f10x_usart.c</FileName>
+              <FileName>stm32f10x_rcc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FWlib\SRC\stm32f10x_usart.c</FilePath>
+              <FilePath>.\FWlib\SRC\stm32f10x_rcc.c</FilePath>
             </File>
             <File>
-              <FileName>stm32f10x_exti.c</FileName>
+              <FileName>stm32f10x_gpio.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FWlib\SRC\stm32f10x_exti.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f10x_sdio.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FWlib\SRC\stm32f10x_sdio.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f10x_dma.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FWlib\SRC\stm32f10x_dma.c</FilePath>
+              <FilePath>.\FWlib\SRC\stm32f10x_gpio.c</FilePath>
             </File>
           </Files>
         </Group>

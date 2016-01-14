@@ -21,7 +21,6 @@
 #include "usb_pwr.h"
 #include "hw_config.h"
 
-#include "sdcard.h"
 #include "usb_bot.h"
 #include "hw_config.h"
 #include "memory.h"

@@ -330,11 +330,6 @@ void Get_Medium_Characteristics(void)
 	Mass_Block_Size = NAND_PAGE_SIZE;
 
   Mass_Memory_Size = (Mass_Block_Count * Mass_Block_Size);
-
-  //printf("\r\n  %d \n" ,Mass_Memory_Size);
-  //printf("\r\n  %d \n" ,Mass_Block_Size);
-  //printf("\r\n  %d \n" ,Mass_Block_Count);
-
 }
 
 #ifdef  DEBUG
