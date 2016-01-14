@@ -32,8 +32,8 @@ vu32 Block_offset;
 vu32 Counter = 0;
 u32 i;
 //u32 Data_Buffer[BULK_MAX_PACKET_SIZE * 2]; /* 512 bytes*/
-//u8 Data1_Buffer[BULK_MAX_PACKET_SIZE * 32]; /* 512 bytes*/
-u8 Data1_Buffer[BULK_MAX_PACKET_SIZE * 1]; /* 512 bytes*/
+u8 Data1_Buffer[BULK_MAX_PACKET_SIZE * 32]; /* 512 bytes*/
+//u8 Data1_Buffer[BULK_MAX_PACKET_SIZE * 1]; /* 512 bytes*/
 //u8 Data_Buffer[BULK_MAX_PACKET_SIZE * 8]; /* 512 bytes*/
 /* Extern variables ----------------------------------------------------------*/
 extern u8 Bulk_Data_Buff[BULK_MAX_PACKET_SIZE];  /* data buffer*/
@@ -66,27 +66,24 @@ void Read_Memory(void)
  // GPIO_SetBits(GPIOB, GPIO_Pin_5);
   if (!Block_Read_count)
   {	
-    //SD_ReadBlock(Memory_Offset,Data_Buffer,512);
-		NAND_ConvertOffsetToAddress(Memory_Offset, 64, &Nand_Addr);
-		//NAND_ReadSmallPage(Data1_Buffer, Nand_Addr, 1);
-		NAND_ReadSpareArea(Data1_Buffer, Nand_Addr, 1);
+		//NAND_ConvertOffsetToAddress(Memory_Offset, 64, &Nand_Addr);
+		NAND_ConvertOffsetToAddress(Memory_Offset, 2048, &Nand_Addr);
+		NAND_ReadSmallPage(Data1_Buffer, Nand_Addr, 1);
+		//NAND_ReadSpareArea(Data1_Buffer, Nand_Addr, 1);
     UserToPMABufferCopy(Data1_Buffer, ENDP1_TXADDR, BULK_MAX_PACKET_SIZE);
-    //Block_Read_count = 2048 - BULK_MAX_PACKET_SIZE;
-		Block_Read_count = 64 - BULK_MAX_PACKET_SIZE;
+    Block_Read_count = 2048 - BULK_MAX_PACKET_SIZE;
+		//Block_Read_count = 64 - BULK_MAX_PACKET_SIZE;
     Block_offset = BULK_MAX_PACKET_SIZE;	 
-	//printf("\r\n  %d \n" ,Block_Read_count);
   }
   else
   {
     UserToPMABufferCopy(Data1_Buffer + Block_offset, ENDP1_TXADDR, BULK_MAX_PACKET_SIZE);
     Block_Read_count -= BULK_MAX_PACKET_SIZE;
     Block_offset += BULK_MAX_PACKET_SIZE;
-	//printf("\r\n  %d \n" ,Block_Read_count);
   }
 
   SetEPTxCount(ENDP1, BULK_MAX_PACKET_SIZE);
   SetEPTxStatus(ENDP1, EP_TX_VALID);
-
 
   Memory_Offset += BULK_MAX_PACKET_SIZE;
   Transfer_Length -= BULK_MAX_PACKET_SIZE;
@@ -112,12 +109,11 @@ void Read_Memory(void)
 * Return         : None.
 *******************************************************************************/
 void Write_Memory(void)
-{ //unsigned int a=0,b=0;
+{
   u32 temp =  Counter + 64;
 	NAND_ADDRESS Nand_Addr;
 	static u16 Last_Erased_Block = -1;
-	
-  //GPIO_SetBits(GPIOB, GPIO_Pin_5);
+
   i = 0;
   for (; Counter < temp; Counter++)
   {
@@ -128,27 +124,19 @@ void Write_Memory(void)
   Memory_Offset += Data_Len;
   Transfer_Length -= Data_Len;
 
-  //if (!(Transfer_Length % 2048))
-	if (!(Transfer_Length % 64))
+  if (!(Transfer_Length % 2048))
+	//if (!(Transfer_Length % 64))
   {
     Counter = 0;
-	/*b=0; a=0;
-	while(a<512){
-		Data_Buffer[b]=((u32) (Data1_Buffer[a+3])<<24)|((u32) (Data1_Buffer[a+2])<<16)|((u32) (Data1_Buffer[a+1])<<8)|((u32) (Data1_Buffer[a]));
-	    a=a+4;
-		b++;
-	}*/
-    //SD_WriteBlock(Memory_Offset - 512,Data_Buffer, 512);
-		/*NAND_ConvertOffsetToAddress(Memory_Offset - 2048, &Nand_Addr);
-		if (Last_Erased_Block != Nand_Addr.Block) {
+		NAND_ConvertOffsetToAddress(Memory_Offset - 2048, 2048, &Nand_Addr);
+		/*if (Last_Erased_Block != Nand_Addr.Block) {
 			NAND_EraseBlock(Nand_Addr);
 			//i=1;
 			Last_Erased_Block = Nand_Addr.Block;
 		}*/
-		NAND_ConvertOffsetToAddress(Memory_Offset - 64, 64, &Nand_Addr);
-		//NAND_WriteSmallPage(Data1_Buffer, Nand_Addr, 1);
-		NAND_WriteSpareArea(Data1_Buffer, Nand_Addr, 1);
-		//i=1;
+		//NAND_ConvertOffsetToAddress(Memory_Offset - 64, 64, &Nand_Addr);
+		NAND_WriteSmallPage(Data1_Buffer, Nand_Addr, 1);
+		//NAND_WriteSpareArea(Data1_Buffer, Nand_Addr, 1);
   }
 
   CSW.dDataResidue -= Data_Len;

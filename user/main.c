@@ -107,11 +107,7 @@ int main(void)
     NAND_Init();
 		NAND_Reset();
   NAND_ReadID(&NAND_Id);
-	NAND_Address.Block = 0;
-	NAND_Address.OffsetInPage= 0;
-	NAND_Address.Page = 0;
-	NAND_Address.Zone = 0;
-	//NAND_EraseBlock(NAND_Address);
+
   Get_Medium_Characteristics();
   Set_USBClock();
   USB_Interrupts_Config(); 
@@ -257,7 +253,7 @@ void Serial_Init(void)
 void Get_Medium_Characteristics(void)
 {
   Mass_Block_Count = NAND_MAX_ZONE * NAND_ZONE_SIZE * NAND_BLOCK_SIZE;
-	Mass_Block_Size = NAND_SPARE_AREA_SIZE;
+	Mass_Block_Size = NAND_PAGE_SIZE;
   Mass_Memory_Size = (Mass_Block_Count * Mass_Block_Size);
 }
 
