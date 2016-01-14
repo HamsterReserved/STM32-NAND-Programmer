@@ -14,7 +14,6 @@
 *******************************************************************************/
 
 /* Includes ------------------------------------------------------------------*/
-//#include "sdcard.h"
 #include "memory.h"
 #include "usb_scsi.h"
 #include "usb_bot.h"
@@ -33,7 +32,8 @@ vu32 Block_offset;
 vu32 Counter = 0;
 u32 i;
 //u32 Data_Buffer[BULK_MAX_PACKET_SIZE * 2]; /* 512 bytes*/
-u8 Data1_Buffer[BULK_MAX_PACKET_SIZE * 32]; /* 512 bytes*/
+//u8 Data1_Buffer[BULK_MAX_PACKET_SIZE * 32]; /* 512 bytes*/
+u8 Data1_Buffer[BULK_MAX_PACKET_SIZE * 1]; /* 512 bytes*/
 //u8 Data_Buffer[BULK_MAX_PACKET_SIZE * 8]; /* 512 bytes*/
 /* Extern variables ----------------------------------------------------------*/
 extern u8 Bulk_Data_Buff[BULK_MAX_PACKET_SIZE];  /* data buffer*/
@@ -67,19 +67,12 @@ void Read_Memory(void)
   if (!Block_Read_count)
   {	
     //SD_ReadBlock(Memory_Offset,Data_Buffer,512);
-		NAND_ConvertOffsetToAddress(Memory_Offset, &Nand_Addr);
-		NAND_ReadSmallPage(Data1_Buffer, Nand_Addr, 1);
-	/*b=0; a=0;
-    while(a<512){
-		Data1_Buffer[a]=(u8) (Data_Buffer[b]);
-		Data1_Buffer[a+1]=(u8) (Data_Buffer[b]>>8);
-		Data1_Buffer[a+2]=(u8) (Data_Buffer[b]>>16);
-		Data1_Buffer[a+3]=(u8) (Data_Buffer[b]>>24);
-		a=a+4;
-		b++;	
-	}*/
+		NAND_ConvertOffsetToAddress(Memory_Offset, 64, &Nand_Addr);
+		//NAND_ReadSmallPage(Data1_Buffer, Nand_Addr, 1);
+		NAND_ReadSpareArea(Data1_Buffer, Nand_Addr, 1);
     UserToPMABufferCopy(Data1_Buffer, ENDP1_TXADDR, BULK_MAX_PACKET_SIZE);
-    Block_Read_count = 2048 - BULK_MAX_PACKET_SIZE;
+    //Block_Read_count = 2048 - BULK_MAX_PACKET_SIZE;
+		Block_Read_count = 64 - BULK_MAX_PACKET_SIZE;
     Block_offset = BULK_MAX_PACKET_SIZE;	 
 	//printf("\r\n  %d \n" ,Block_Read_count);
   }
@@ -135,7 +128,8 @@ void Write_Memory(void)
   Memory_Offset += Data_Len;
   Transfer_Length -= Data_Len;
 
-  if (!(Transfer_Length % 2048))
+  //if (!(Transfer_Length % 2048))
+	if (!(Transfer_Length % 64))
   {
     Counter = 0;
 	/*b=0; a=0;
@@ -145,13 +139,15 @@ void Write_Memory(void)
 		b++;
 	}*/
     //SD_WriteBlock(Memory_Offset - 512,Data_Buffer, 512);
-		NAND_ConvertOffsetToAddress(Memory_Offset - 2048, &Nand_Addr);
+		/*NAND_ConvertOffsetToAddress(Memory_Offset - 2048, &Nand_Addr);
 		if (Last_Erased_Block != Nand_Addr.Block) {
 			NAND_EraseBlock(Nand_Addr);
 			//i=1;
 			Last_Erased_Block = Nand_Addr.Block;
-		}
-		NAND_WriteSmallPage(Data1_Buffer, Nand_Addr, 1);
+		}*/
+		NAND_ConvertOffsetToAddress(Memory_Offset - 64, 64, &Nand_Addr);
+		//NAND_WriteSmallPage(Data1_Buffer, Nand_Addr, 1);
+		NAND_WriteSpareArea(Data1_Buffer, Nand_Addr, 1);
 		//i=1;
   }
 

@@ -128,10 +128,12 @@ typedef struct
 #define ADDR_3rd_CYCLE(ADDR)       (uint8_t)(((ADDR)& 0xFF0000) >> 16)   /* 3rd addressing cycle */
 #define ADDR_4th_CYCLE(ADDR)       (uint8_t)(((ADDR)& 0xFF000000) >> 24) /* 4th addressing cycle */   
 
-#define COL_ADDR_1st_CYCLE(ADDR)    (uint8_t)((ADDR)& 0xFF)
-#define COL_ADDR_2nd_CYCLE(ADDR)    (uint8_t)(((ADDR)& 0x0F00) >> 8)
-#define ROW_ADDR_3rd_CYCLE(ADDR)    (uint8_t)((ADDR)& 0xFF)
-#define ROW_ADDR_4th_CYCLE(ADDR)    (uint8_t)(((ADDR)& 0xFF00) >> 8)
+/* The following must be used with macro ROW_ADDRESS and COLUMN_ADDRESS */
+/* since the parameter is not byte address like above */
+#define COL_ADDR_1st_CYCLE(COL_NUM)    (uint8_t)((COL_NUM)& 0xFF)
+#define COL_ADDR_2nd_CYCLE(COL_NUM)    (uint8_t)(((COL_NUM)& 0x0F00) >> 8)
+#define ROW_ADDR_3rd_CYCLE(ROW_NUM)    (uint8_t)((ROW_NUM)& 0xFF)
+#define ROW_ADDR_4th_CYCLE(ROW_NUM)    (uint8_t)(((ROW_NUM)& 0xFF00) >> 8)
 /**
   * @}
   */ 
@@ -157,7 +159,7 @@ uint32_t NAND_Reset(void);
 uint32_t NAND_GetStatus(void);
 uint32_t NAND_ReadStatus(void);
 uint32_t NAND_AddressIncrement(NAND_ADDRESS* Address);
-void NAND_ConvertOffsetToAddress(vu32 offset, NAND_ADDRESS* addr);
+void NAND_ConvertOffsetToAddress(vu32 offset, vu32 page_size, NAND_ADDRESS* addr);
 
 #ifdef __cplusplus
 }

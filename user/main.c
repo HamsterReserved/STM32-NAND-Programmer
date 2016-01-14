@@ -93,6 +93,8 @@ int main(void)
 {
   GPIO_InitTypeDef GPIO_InitStructure;
 	NAND_IDTypeDef NAND_Id;
+	NAND_ADDRESS NAND_Address;
+	int i=0;
 #ifdef DEBUG
   debug();
 #endif
@@ -101,70 +103,15 @@ int main(void)
   RCC_AHBPeriphClockCmd(RCC_AHBPeriph_FSMC, ENABLE);
   
   Serial_Init();
-  
-  /////////////////////////////////////////////////////////////////////
-  //////// SDCARD Initialisation //////////////////////////////////////
-  /////////////////Section adapted from ST example/////////////////////
-  
-  /*-------------------------- SD Init ----------------------------- */
-
-  /*
-  if (Status == SD_OK)
-  {	
-     
-	 Status = SD_GetCardInfo(&SDCardInfo);	   
-  }
- 
-  if (Status == SD_OK)
-  {	*/
-    /*----------------- Select Card --------------------------------*/
-    /*Status = SD_SelectDeselect((uint32_t) (SDCardInfo.RCA << 16));  
-  }
-
- 
-  if (Status == SD_OK)
-  {  
-    Status = SD_SetDeviceMode(SD_DMA_MODE);	 
-	//Status = SD_SetDeviceMode(SD_INTERRUPT_MODE);	
-	//Status = SD_SetDeviceMode(SD_POLLING_MODE);  
-  }
-  
-  if (Status == SD_OK)
-  {	 
-     
-	  //Status = SD_ReadBlock(0x00, Buffer_Block_Rx, BlockSize);  
-	  //Status = SD_WriteBlock(0x00, Buffer_Block_Tx, BlockSize);   
-      Status = SD_ReadMultiBlocks(0x00, Buffer_MultiBlock_Rx, BlockSize, NumberOfBlocks);	
-	 
-  }
-  
- 
-  if (Status == SD_OK)
-  {	*/
-    /* Read block of 512 bytes from address 0 */
-    /*Status = SD_ReadBlock(0x00, Buffer_Block_Rx, BlockSize);  
-  }
-
- 
-  
-  if (Status == SD_OK)
-  { */
-    /* Read block of many bytes from address 0 */
-    /* Status = SD_ReadMultiBlocks(0x00, Buffer_MultiBlock_Rx, BlockSize, NumberOfBlocks);	 
-  }
-
-  if (Status == SD_OK)
-  {	 */
-    /* Check the corectness of written dada */
-    
-/*
-	printf("\r\nSD SDIO-1bit模式 测试TF卡读写成功！ \n ");
-  }  */
 
     NAND_Init();
 		NAND_Reset();
   NAND_ReadID(&NAND_Id);
-   
+	NAND_Address.Block = 0;
+	NAND_Address.OffsetInPage= 0;
+	NAND_Address.Page = 0;
+	NAND_Address.Zone = 0;
+	//NAND_EraseBlock(NAND_Address);
   Get_Medium_Characteristics();
   Set_USBClock();
   USB_Interrupts_Config(); 
@@ -176,11 +123,7 @@ int main(void)
 	
   while (1)
   {	
-    //printf("\nTEST OK!\n");
-    //if (JoyState() != 0)
-    //{
-    //  Joystick_Send(JoyState());
-    //}
+
   }
 }
 
@@ -195,9 +138,6 @@ void Delay(vu32 nCount)
 {
   for(; nCount!= 0;nCount--);
 }
-
-
-
 
 int SendChar (int ch)  {                /* Write character to Serial Port     */
 
@@ -315,20 +255,9 @@ void Serial_Init(void)
 * Return         : None.
 *******************************************************************************/
 void Get_Medium_Characteristics(void)
-{ //unsigned long a,b;
-  //u32 temp1 = 0;
-  //u32 temp2 = 0;
-  //Status = SD_GetCardInfo(&SDCardInfo);	 
-  //SD_GetCardInfo(&MSD_csd);
-
-  //a = SDCardInfo.SD_csd.DeviceSize + 1;
-  //b = 1 << (SDCardInfo.SD_csd.DeviceSizeMul + 2);
-
+{
   Mass_Block_Count = NAND_MAX_ZONE * NAND_ZONE_SIZE * NAND_BLOCK_SIZE;
-
-  //Mass_Block_Size = 1<<SDCardInfo.SD_csd.RdBlockLen;
-	Mass_Block_Size = NAND_PAGE_SIZE;
-
+	Mass_Block_Size = NAND_SPARE_AREA_SIZE;
   Mass_Memory_Size = (Mass_Block_Count * Mass_Block_Size);
 }
 

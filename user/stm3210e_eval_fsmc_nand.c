@@ -345,13 +345,13 @@ uint32_t NAND_WriteSpareArea(uint8_t *pBuffer, NAND_ADDRESS Address, uint32_t Nu
   while((NumSpareAreaTowrite != 0x00) && (addressstatus == NAND_VALID_ADDRESS) && (status == NAND_READY))
   {
     /*!< Page write Spare area command and address */
-    *(__IO uint8_t *)(Bank_NAND_ADDR | CMD_AREA) = NAND_CMD_AREA_C;
+    //*(__IO uint8_t *)(Bank_NAND_ADDR | CMD_AREA) = NAND_CMD_AREA_C;
     *(__IO uint8_t *)(Bank_NAND_ADDR | CMD_AREA) = NAND_CMD_WRITE0;
 
     *(__IO uint8_t *)(Bank_NAND_ADDR | ADDR_AREA) = 0x00; 
-    *(__IO uint8_t *)(Bank_NAND_ADDR | ADDR_AREA) = ADDR_1st_CYCLE(ROW_ADDRESS);
-    *(__IO uint8_t *)(Bank_NAND_ADDR | ADDR_AREA) = ADDR_2nd_CYCLE(ROW_ADDRESS);
-    *(__IO uint8_t *)(Bank_NAND_ADDR | ADDR_AREA) = ADDR_3rd_CYCLE(ROW_ADDRESS);
+    *(__IO uint8_t *)(Bank_NAND_ADDR | ADDR_AREA) = 0x08;
+    *(__IO uint8_t *)(Bank_NAND_ADDR | ADDR_AREA) = ROW_ADDR_3rd_CYCLE(ROW_ADDRESS);
+    *(__IO uint8_t *)(Bank_NAND_ADDR | ADDR_AREA) = ROW_ADDR_4th_CYCLE(ROW_ADDRESS);
 
     /*!< Calculate the size */ 
     size = NAND_SPARE_AREA_SIZE + (NAND_SPARE_AREA_SIZE * numsparesreawritten);
@@ -564,10 +564,10 @@ uint32_t NAND_AddressIncrement(NAND_ADDRESS* Address)
 }
 
 // Convert general offset to addr struct
-void NAND_ConvertOffsetToAddress(vu32 offset, NAND_ADDRESS* addr) {
-	uint32_t zone_bytes = NAND_ZONE_SIZE * NAND_BLOCK_SIZE * NAND_PAGE_SIZE;
-	uint32_t block_bytes = NAND_BLOCK_SIZE * NAND_PAGE_SIZE;
-	uint32_t page_bytes = NAND_PAGE_SIZE;
+void NAND_ConvertOffsetToAddress(vu32 offset, vu32 page_size, NAND_ADDRESS* addr) {
+	uint32_t zone_bytes = NAND_ZONE_SIZE * NAND_BLOCK_SIZE * page_size;
+	uint32_t block_bytes = NAND_BLOCK_SIZE * page_size;
+	uint32_t page_bytes = page_size;
 	
 	if (offset > NAND_MAX_ZONE * zone_bytes || addr == 0) // Where is NULL?
 		return;
@@ -577,6 +577,7 @@ void NAND_ConvertOffsetToAddress(vu32 offset, NAND_ADDRESS* addr) {
 	addr->Page = (offset % block_bytes) / page_bytes;
 	addr->OffsetInPage = offset % page_bytes;
 }
+
 /**
   * @}
   */
